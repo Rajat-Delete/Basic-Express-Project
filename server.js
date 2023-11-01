@@ -12,6 +12,39 @@ const friendsList = [{
     name : 'Issac Newton'
 }]
 
+
+app.use(express.json());//this is a inbuilt middleware in express, it parses incoming request as JSON payloads
+
+app.use((req,res,next)=>{
+    const startTime = Date.now();
+    console.log(`${req.method} request fired at ${req.url}`);
+    console.log(`Response given by system is ${res}`);
+    next();
+    const timetoServerRequest = Date.now() - startTime;
+    console.log(`Time to Serve the request is ${timetoServerRequest}ms`);
+})
+
+
+app.post('/friends',(req,res)=>{
+    if(!req.body.name){
+        return res.status(400).json({
+            error : 'Missing Friends name'
+        })
+    }
+
+    const friendData  = {
+        id : friendsList.length,
+        name : req.body.name
+    }
+    friendsList.push(friendData);
+
+    res.status(200).json({
+        Message :'Friend Added Successfully'
+    });
+
+
+})
+
 app.get('/',(req,res)=>{
     res.send('Hey Buddy! Welcome to Home Page')
 })
